@@ -11,7 +11,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
 import { CartProvider } from "./context/CartContext";
-import Payment from "./pages/payment/payment";
+// import Payment from "./pages/payment/payment";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/payment" element={<Payment />} />
+              {/* <Route path="/payment" element={<Payment />} /> */}
               <Route path="/product/:id" element={<ProductDetails />} />
             </Routes>
           </main>
