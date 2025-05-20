@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CartContext } from "../context/CartContext";
-import { dummyProducts } from "../data/product";
+import CartContext from "../context/CartContext";
+import dummyProducts from "../data/product";
+import { Bounce, toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -13,7 +14,6 @@ const ProductDetails = () => {
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
-    // Simulate fetching product from an API
     setTimeout(() => {
       const foundProduct = dummyProducts.find((p) => p.id === parseInt(id, 10));
       setProduct(foundProduct || null);
@@ -41,26 +41,45 @@ const ProductDetails = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
-      alert(
-        `${quantity} ${product.name}${quantity > 1 ? "s" : ""} added to cart!`
+      // alert();
+
+      toast.success(
+        `${quantity} ${product.name}${quantity > 1 ? "s" : ""} added to cart!`,
+        {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        }
       );
     }
   };
 
   if (loading) {
-    return <div className="loading">Loading product details...</div>;
+    return (
+      <div className="text-center py-10 text-gray-500">
+        Loading product details...
+      </div>
+    );
   }
 
   if (!product) {
-    return <div className="not-found">Product not found.</div>;
+    return (
+      <div className="text-center py-10 text-red-500">Product not found.</div>
+    );
   }
 
   return (
-    <div className="product-details-page">
-      <div className="product-details-container">
+    <div className="product-details-page py-10 px-4">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
         {/* Product Images */}
-        <div className="product-images">
-          <div className="main-image">
+        <div className="product-images space-y-4">
+          <div className="main-image border rounded-lg overflow-hidden">
             <img
               src={
                 product.images && product.images.length > 0
@@ -68,17 +87,22 @@ const ProductDetails = () => {
                   : product.image
               }
               alt={product.name}
+              className="w-full h-auto object-cover"
             />
           </div>
 
           {product.images && product.images.length > 1 && (
-            <div className="image-thumbnails">
+            <div className="image-thumbnails flex space-x-2">
               {product.images.map((img, index) => (
                 <img
                   key={index}
                   src={img}
                   alt={`${product.name} thumbnail ${index + 1}`}
-                  className={selectedImage === index ? "selected" : ""}
+                  className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                    selectedImage === index
+                      ? "border-blue-500"
+                      : "border-gray-300"
+                  }`}
                   onClick={() => setSelectedImage(index)}
                 />
               ))}
@@ -87,25 +111,42 @@ const ProductDetails = () => {
         </div>
 
         {/* Product Info */}
-        <div className="product-info">
-          <h1>{product.name}</h1>
-          <p>{product.description}</p>
-          <div className="price">${product.price}</div>
+        <div className="product-info space-y-6">
+          <h1 className="text-3xl font-bold">{product.name}</h1>
+          <p className="text-gray-600">{product.description}</p>
+          <div className="text-2xl font-semibold text-blue-600">
+            ${product.price}
+          </div>
 
           {/* Quantity Controls */}
-          <div className="quantity-controls">
-            <button onClick={decrementQuantity}>-</button>
+          <div className="quantity-controls flex items-center space-x-3">
+            <button
+              onClick={decrementQuantity}
+              className="px-3 py-1 border rounded text-lg bg-gray-100 hover:bg-gray-200"
+            >
+              -
+            </button>
             <input
               type="number"
               value={quantity}
               onChange={handleQuantityChange}
               min="1"
+              className="w-16 text-center border rounded px-2 py-1"
             />
-            <button onClick={incrementQuantity}>+</button>
+            <button
+              onClick={incrementQuantity}
+              className="px-3 py-1 border rounded text-lg bg-gray-100 hover:bg-gray-200"
+            >
+              +
+            </button>
           </div>
 
-          {/* Add to Cart */}
-          <button onClick={handleAddToCart}>Add to Cart</button>
+          <button
+            onClick={handleAddToCart}
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-200"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

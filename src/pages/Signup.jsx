@@ -10,20 +10,19 @@ const Signup = () => {
     confirmPassword: '',
     agreeTerms: false
   });
-  
+
   const [errors, setErrors] = useState({});
   const [formSubmitted, setFormSubmitted] = useState(false);
-  
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
-    
+
     setFormData(prevData => ({
       ...prevData,
       [name]: newValue
     }));
-    
-    // Clear error when user starts typing again
+
     if (errors[name]) {
       setErrors(prevErrors => ({
         ...prevErrors,
@@ -31,57 +30,29 @@ const Signup = () => {
       }));
     }
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
-    
-    // Validate first name
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
-    }
-    
-    // Validate last name
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    }
-    
-    // Validate email
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email address is invalid';
-    }
-    
-    // Validate password
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    // Validate confirm password
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    // Validate terms agreement
-    if (!formData.agreeTerms) {
-      newErrors.agreeTerms = 'You must agree to the terms and conditions';
-    }
-    
+
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email address is invalid';
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to the terms and conditions';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      // Form is valid, submit it
       console.log('Form submitted:', formData);
       setFormSubmitted(true);
-      
-      // Reset form
       setFormData({
         firstName: '',
         lastName: '',
@@ -92,107 +63,120 @@ const Signup = () => {
       });
     }
   };
-  
+
   return (
-    <div className="signup-page">
-      <div className="signup-container">
-        <h1>Create an Account</h1>
-        
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Create an Account</h1>
+
         {formSubmitted ? (
-          <div className="success-message">
-            <h3>Registration Successful!</h3>
-            <p>Your account has been created. Please check your email for verification.</p>
-            <Link to="/login" className="login-link">Proceed to Login</Link>
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-green-600 mb-2">Registration Successful!</h3>
+            <p className="text-gray-600 mb-4">Your account has been created. Please check your email for verification.</p>
+            <Link to="/login" className="text-indigo-600 hover:underline font-medium">Proceed to Login</Link>
           </div>
         ) : (
-          <form className="signup-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="firstName">First Name</label>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* First Name */}
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
               <input
                 type="text"
                 id="firstName"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={errors.firstName ? 'error' : ''}
+                className={`w-full px-3 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded`}
               />
-              {errors.firstName && <p className="error-message">{errors.firstName}</p>}
+              {errors.firstName && <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>}
             </div>
-            
-            <div className="form-group">
-              <label htmlFor="lastName">Last Name</label>
+
+            {/* Last Name */}
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
               <input
                 type="text"
                 id="lastName"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={errors.lastName ? 'error' : ''}
+                className={`w-full px-3 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded`}
               />
-              {errors.lastName && <p className="error-message">{errors.lastName}</p>}
+              {errors.lastName && <p className="text-sm text-red-500 mt-1">{errors.lastName}</p>}
             </div>
-            
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
+
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
                 type="email"
                 id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={errors.email ? 'error' : ''}
+                className={`w-full px-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded`}
               />
-              {errors.email && <p className="error-message">{errors.email}</p>}
+              {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
             </div>
-            
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
+
+            {/* Password */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={errors.password ? 'error' : ''}
+                className={`w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded`}
               />
-              {errors.password && <p className="error-message">{errors.password}</p>}
+              {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
             </div>
-            
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
               <input
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={errors.confirmPassword ? 'error' : ''}
+                className={`w-full px-3 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded`}
               />
-              {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>}
             </div>
-            
-            <div className="form-group checkbox">
+
+            {/* Terms */}
+            <div className="flex items-start space-x-2">
               <input
                 type="checkbox"
                 id="agreeTerms"
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleChange}
-                className={errors.agreeTerms ? 'error' : ''}
+                className="mt-1"
               />
-              <label htmlFor="agreeTerms">
-                I agree to the <a href="/terms">Terms and Conditions</a>
+              <label htmlFor="agreeTerms" className="text-sm text-gray-700">
+                I agree to the <a href="/terms" className="text-indigo-600 hover:underline">Terms and Conditions</a>
               </label>
-              {errors.agreeTerms && <p className="error-message">{errors.agreeTerms}</p>}
             </div>
-            
-            <button type="submit" className="signup-btn">Create Account</button>
+            {errors.agreeTerms && <p className="text-sm text-red-500 mt-1">{errors.agreeTerms}</p>}
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
+            >
+              Create Account
+            </button>
           </form>
         )}
-        
-        <div className="login-redirect">
-          Already have an account? <Link to="/login">Login</Link>
-        </div>
+
+        <p className="mt-6 text-center text-sm text-gray-600">
+          Already have an account?{' '}
+          <Link to="/login" className="text-indigo-600 hover:underline">Login</Link>
+        </p>
       </div>
     </div>
   );
